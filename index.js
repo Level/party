@@ -53,6 +53,7 @@ function withProxy (proxy, dir, opts) {
                 return close.apply(this, arguments);
             };
             proxy.swap(db);
+            proxy.emit('open');
         }
     }
     
@@ -62,15 +63,14 @@ function withProxy (proxy, dir, opts) {
         (function connect () {
             var stream = net.connect(sockfile);
             stream.on('connect', function () {
-                proxy.swap(xdb);
-                db.emit('open');
-                
                 var close = xdb.close;
                 xdb.close = function () {
                     stream.removeListener('end', onend);
                     stream.end();
                     return close.apply(this, arguments);
                 };
+                proxy.swap(xdb);
+                proxy.emit('open');
             });
             
             stream.on('error', function (err) {
