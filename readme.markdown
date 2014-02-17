@@ -5,6 +5,8 @@ open a leveldb handle multiple times, transparently upgrading to use
 to use the same leveldb data directory at once and re-electing a new master when
 the primary unix socket goes down
 
+[![build status](https://secure.travis-ci.org/substack/level-party.png)](http://travis-ci.org/substack/level-party)
+
 # example
 
 Normally with [level](https://npmjs.org/package/level), when you try to open

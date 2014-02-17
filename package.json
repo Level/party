@@ -1,0 +1,38 @@
+{
+  "name": "level-party",
+  "version": "0.0.0",
+  "description": "open a leveldb handle multiple times",
+  "main": "index.js",
+  "dependencies": {
+    "level": "^0.18.0",
+    "level-proxy": "^0.0.0",
+    "multilevel": "^5.5.0"
+  },
+  "devDependencies": {
+    "tape": "^2.3.2"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/level-party.git"
+  },
+  "homepage": "https://github.com/substack/level-party",
+  "keywords": [
+    "level",
+    "leveldb",
+    "database",
+    "handle",
+    "multi-handle",
+    "multilevel",
+    "unix",
+    "socket"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT"
+}
