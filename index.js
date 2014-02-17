@@ -19,7 +19,6 @@ module.exports = function (dir, opts) {
     }
     
     function onopen (times) {
-console.log('ONOPEN', times); 
         db.removeListener('error', onerror);
         
         var server = net.createServer(function (stream) {
@@ -34,7 +33,6 @@ console.log('ONOPEN', times);
             server.removeListener('listening', onlistening);
             if (!times && err && err.code === 'EADDRINUSE') {
                 fs.unlink(sockfile, function (err) {
-console.log('UNLINKED!', err); 
                     if (err) db.emit('error', err)
                     else onopen(1)
                 });
@@ -60,10 +58,9 @@ console.log('UNLINKED!', err);
         (function connect () {
             var stream = net.connect(sockfile);
             stream.on('connect', function () {
-                xdb.on('open', function () {
-                    proxy.swap(xdb);
-                    db.emit('open');
-                });
+                proxy.swap(xdb);
+                db.emit('open');
+                
                 var close = xdb.close;
                 xdb.close = function () {
                     stream.end();
