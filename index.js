@@ -47,10 +47,9 @@ function withProxy (proxy, dir, opts) {
         
         function onlistening () {
             server.removeListener('error', onerror);
-            var close = db.close;
             db.close = function () {
+                proxy.swap(null);
                 server.close();
-                return close.apply(this, arguments);
             };
             proxy.swap(db);
             proxy.emit('open');
@@ -63,11 +62,10 @@ function withProxy (proxy, dir, opts) {
         (function connect () {
             var stream = net.connect(sockfile);
             stream.on('connect', function () {
-                var close = xdb.close;
                 xdb.close = function () {
+                    proxy.swap(null);
                     stream.removeListener('end', onend);
                     stream.end();
-                    return close.apply(this, arguments);
                 };
                 proxy.swap(xdb);
                 proxy.emit('open');

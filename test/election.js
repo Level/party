@@ -6,14 +6,15 @@ var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 
 test('failover election party', function (t) {
     var keys = [ 'a', 'b', 'c', 'e', 'f', 'g' ];
-    t.plan(keys.length * 2);
+    var len = keys.length;
+    t.plan(len * (len + 1) / 2);
     var pending = keys.length;
     var handles = {};
     
     keys.forEach(function (key) {
         var h = open(key);
         h.on('open', function () {
-            if (--pending === 0) ready();
+            if (--pending === 0) spinDown();
         });
     });
     
@@ -22,11 +23,12 @@ test('failover election party', function (t) {
         return h;
     }
     
-    function ready () {
+    function spinDown () {
         var alive = keys.slice();
         (function next () {
+            if (alive.length === 0) return;
+            
             check(alive, function () {
-                console.log('now time to fail');
                 var key = alive.shift();
                 handles[key].close();
                 next();
