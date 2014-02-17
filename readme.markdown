@@ -1,30 +1,31 @@
-# level-multihandle
+# level-party
 
 open a leveldb handle multiple times, transparently upgrading to use
 [multilevel](https://npmjs.org/package/multilevel) when more than 1 process try
-to use the same leveldb data directory at once
+to use the same leveldb data directory at once and re-electing a new master when
+the primary unix socket goes down
+
+# example
 
 Normally with [level](https://npmjs.org/package/level), when you try to open
 a database handle from more than one process you will get a locking error:
-
-# example
 
 ```
 events.js:72
         throw er; // Unhandled 'error' event
               ^
-OpenError: IO error: lock /home/substack/projects/level-multihandle/example/data/LOCK: Resource temporarily unavailable
-    at /home/substack/projects/level-multihandle/node_modules/level/node_modules/level-packager/node_modules/levelup/lib/levelup.js:114:34
+OpenError: IO error: lock /home/substack/projects/level-party/example/data/LOCK: Resource temporarily unavailable
+    at /home/substack/projects/level-party/node_modules/level/node_modules/level-packager/node_modules/levelup/lib/levelup.js:114:34
 ```
 
-With level-multihandle, the database open will automatically drop down to using
+With level-party, the database open will automatically drop down to using
 multilevel over a unix socket using metadata placed into the level data
 directory transparently.
 
 This means that if you have 2 programs, 1 that gets:
 
 ``` js
-var level = require('level-multihandle');
+var level = require('level-party');
 var db = level(__dirname + '/data', { encoding: 'json' });
 
 setInterval(function () {
@@ -37,7 +38,7 @@ setInterval(function () {
 and 1 that puts:
 
 ``` js
-var level = require('level-multihandle');
+var level = require('level-party');
 var db = level(__dirname + '/data', { encoding: 'json' });
 
 var n = Math.floor(Math.random() * 100000);
@@ -53,7 +54,7 @@ and you start them up in any order, everything will just work! No more
 # methods
 
 ``` js
-var level = require('level-multihandle')
+var level = require('level-party')
 ```
 
 ## var db = level(...)
@@ -67,7 +68,7 @@ handle back in the response.
 With [npm](https://npmjs.org) do:
 
 ```
-npm install level-multihandle
+npm install level-party
 ```
 
 # license
