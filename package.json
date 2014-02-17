@@ -4,12 +4,12 @@
   "description": "open a leveldb handle multiple times",
   "main": "index.js",
   "dependencies": {
-    "level": "^0.18.0",
-    "level-proxy": "^0.0.0",
-    "multilevel": "^5.5.0"
+    "level": "~0.18.0",
+    "level-proxy": "~0.0.1",
+    "multilevel": "~5.5.0"
   },
   "devDependencies": {
-    "tape": "^2.3.2"
+    "tape": "~2.3.2"
   },
   "scripts": {
     "test": "tape test/*.js"
