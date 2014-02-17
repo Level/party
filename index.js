@@ -10,24 +10,47 @@ module.exports = function (dir, opts) {
     var db = level(dir, opts);
     var sockfile = path.join(dir, 'level-multihandle.sock');
     
-    db.once('error', function (err) {
-        db.removeListener('open', onopen);
-        
-        if (err.type === 'OpenError') createStream();
-    });
+    db.once('error', onerror);
     db.once('open', onopen);
     
-    function onopen () {
+    function onerror (err) {
+        db.removeListener('open', onopen);
+        if (err.type === 'OpenError') createStream();
+    }
+    
+    function onopen (times) {
+console.log('ONOPEN', times); 
+        db.removeListener('error', onerror);
+        
         var server = net.createServer(function (stream) {
             stream.pipe(multilevel.server(db)).pipe(stream);
         });
         server.listen(sockfile);
-        var close = db.close;
-        db.close = function () {
-            server.close();
-            return close.apply(this, arguments);
-        };
-        proxy.swap(db);
+        
+        server.once('error', onerror);
+        server.once('listening', onlistening);
+        
+        function onerror (err) {
+            server.removeListener('listening', onlistening);
+            if (!times && err && err.code === 'EADDRINUSE') {
+                fs.unlink(sockfile, function (err) {
+console.log('UNLINKED!', err); 
+                    if (err) db.emit('error', err)
+                    else onopen(1)
+                });
+            }
+            else db.emit('error', err);
+        }
+        
+        function onlistening () {
+            server.removeListener('error', onerror);
+            var close = db.close;
+            db.close = function () {
+                server.close();
+                return close.apply(this, arguments);
+            };
+            proxy.swap(db);
+        }
     }
     return proxy;
     
