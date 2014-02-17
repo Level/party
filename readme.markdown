@@ -32,7 +32,7 @@ setInterval(function () {
     db.get('a', function (err, value) {
         console.log('a=', value);
     });
-}, 1000);
+}, 250);
 ```
 
 and 1 that puts:
@@ -50,6 +50,30 @@ setInterval(function () {
 
 and you start them up in any order, everything will just work! No more
 `IO error: lock` exceptions.
+
+```
+$ node put.js & sleep 0.2; node put.js & sleep 0.2; node put.js & sleep 0.2; node put.js & sleep 0.2
+[1] 3498
+[2] 3502
+[3] 3509
+[4] 3513
+$ node get.js
+a= 35340
+a= 31575
+a= 37639
+a= 58874
+a= 35341
+a= 31576
+$ node get.js
+a= 35344
+a= 31579
+a= 37643
+a= 58878
+a= 35345
+^C
+```
+
+Hooray!
 
 # methods
 
