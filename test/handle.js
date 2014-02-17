@@ -2,7 +2,7 @@ var test = require('tape');
 var level = require('../');
 var path = require('path');
 var tmpdir = require('os').tmpdir();
-var datadir = path.join(tmpdir, 'level-multilevel-' + Math.random());
+var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 
 test('two handles', function (t) {
     t.plan(1);
