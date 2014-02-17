@@ -6,25 +6,38 @@ var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 
 test('failover election party', function (t) {
     var keys = [ 'a', 'b', 'c', 'e', 'f', 'g' ];
+    t.plan(keys.length * 2);
     var pending = keys.length;
     var handles = {};
     
     keys.forEach(function (key) {
-        var h = handles[key] = level(datadir, { encoding: 'json' });
+        var h = open(key);
         h.on('open', function () {
             if (--pending === 0) ready();
         });
     });
     
-    function ready () {
-        check(function () {
-            console.log('now time to fail');
-        });
+    function open (key) {
+        var h = handles[key] = level(datadir, { encoding: 'json' });
+        return h;
     }
     
-    function check (cb) {
+    function ready () {
+        var alive = keys.slice();
+        (function next () {
+            check(alive, function () {
+                console.log('now time to fail');
+                var key = alive.shift();
+                handles[key].close();
+                next();
+            });
+        })();
+    }
+    
+    function check (keys, cb) {
         var pending = keys.length;
-        for (var i = 0; i < keys.length - 1; i++) (function (a, b) {
+        if (pending === 0) return cb();
+        for (var i = 0; i < keys.length; i++) (function (a, b) {
             var value = Math.random();
             handles[a].put(a, value, function (err) {
                 if (err) t.fail(err);
@@ -34,6 +47,6 @@ test('failover election party', function (t) {
                     if (--pending === 0) cb();
                 });
             });
-        })(keys[i], keys[i+1]);
+        })(keys[i], keys[(i+1) % keys.length]);
     }
 });
