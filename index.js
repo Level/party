@@ -7,6 +7,11 @@ var path = require('path');
 
 module.exports = function (dir, opts) {
     var proxy = levelProxy();
+    withProxy(proxy, dir, opts);
+    return proxy;
+};
+
+function withProxy (proxy, dir, opts) {
     var db = level(dir, opts);
     var sockfile = path.join(dir, 'level-multihandle.sock');
     
@@ -50,7 +55,6 @@ module.exports = function (dir, opts) {
             proxy.swap(db);
         }
     }
-    return proxy;
     
     function createStream () {
         var xdb = multilevel.client();
@@ -63,15 +67,23 @@ module.exports = function (dir, opts) {
                 
                 var close = xdb.close;
                 xdb.close = function () {
+                    stream.removeListener('end', onend);
                     stream.end();
                     return close.apply(this, arguments);
                 };
             });
             
             stream.on('error', function (err) {
+                stream.removeListener('end', onend);
                 setTimeout(connect, 50);
             });
+            stream.on('end', onend);
             stream.pipe(xdb.createRpcStream()).pipe(stream);
+            
+            function onend () {
+                proxy.swap(null);
+                withProxy(proxy, dir, opts);
+            }
         })();
     }
-};
+}

@@ -5,4 +5,4 @@ setInterval(function () {
     db.get('a', function (err, value) {
         console.log('a=', value);
     });
-}, 1000);
+}, 250);
