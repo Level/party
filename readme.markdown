@@ -7,6 +7,8 @@ the primary unix socket goes down
 
 [![build status](https://secure.travis-ci.org/substack/level-party.png)](http://travis-ci.org/substack/level-party)
 
+[![level-party](http://substack.net/images/level_party.png)](http://substack.net/images/level_party.svg)
+
 # example
 
 Normally with [level](https://npmjs.org/package/level), when you try to open
