@@ -1,6 +1,7 @@
 var level = require('level');
 var multilevel = require('multilevel');
 var levelProxy = require('level-proxy');
+var levelParty = require('level-party');
 var net = require('net');
 var fs = require('fs');
 var path = require('path');
@@ -13,7 +14,8 @@ module.exports = function (dir, opts) {
 
 function withProxy (proxy, dir, opts) {
     var db = level(dir, opts);
-    var sockfile = path.join(dir, 'level-multihandle.sock');
+    var sockfile = path.join(dir, 'level-party.sock');
+    var manifest = path.join(dir, 'level-party-manifest.json');
     
     db.once('error', onerror);
     db.once('open', onopen);
