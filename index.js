@@ -27,6 +27,7 @@ function withProxy (proxy, dir, opts) {
         db.removeListener('error', onerror);
         
         var server = net.createServer(function (stream) {
+            stream.on('error', function (err) {});
             stream.pipe(multilevel.server(db)).pipe(stream);
         });
         server.listen(sockfile);
