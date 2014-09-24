@@ -9,7 +9,7 @@ var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 var lopts = { keyEncoding: bytewise, valueEncoding: 'json' };
 
 test('bytewise key encoding', function (t) {
-    t.plan(5);
+    t.plan(7);
     var adb = level(datadir, lopts);
     var bdb = level(datadir, lopts);
     var value = Math.floor(Math.random() * 100000);
@@ -23,6 +23,10 @@ test('bytewise key encoding', function (t) {
             t.equal(x, value);
         });
         
+        adb.createReadStream().on('data', function (row) {
+            t.deepEqual(row.key, [ 'a' ]);
+            t.deepEqual(row.value, value);
+        });
         bdb.createReadStream().on('data', function (row) {
             t.deepEqual(row.key, [ 'a' ]);
             t.deepEqual(row.value, value);
