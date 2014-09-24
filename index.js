@@ -63,6 +63,7 @@ function withProxy (proxy, dir, opts) {
         (function connect () {
             var stream = net.connect(sockfile);
             stream.on('connect', function () {
+                xdb.open = function () {};
                 xdb.close = function () {
                     proxy.swap(null);
                     stream.removeListener('end', onend);
