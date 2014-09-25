@@ -3,7 +3,7 @@ var level = require('../');
 var path = require('path');
 var bsub = require('level-sublevel/bytewise');
 var os = require('os');
-var tmpdir = os.tmpdir ? os.tmpdir() : os.tmpDir();
+var tmpdir = require('osenv').tmpdir();
 var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 var bytewise = require('bytewise');
 

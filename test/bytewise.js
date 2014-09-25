@@ -3,7 +3,7 @@ var level = require('../');
 var path = require('path');
 var bytewise = require('bytewise');
 var os = require('os');
-var tmpdir = os.tmpdir ? os.tmpdir() : os.tmpDir();
+var tmpdir = require('osenv').tmpdir();
 var datadir = path.join(tmpdir, 'level-party-' + Math.random());
 
 var lopts = { keyEncoding: bytewise, valueEncoding: 'json' };
