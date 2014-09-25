@@ -65,7 +65,7 @@ function withProxy (proxy, dir, opts) {
             
             function cleanup () {
                 Object.keys(iterators).forEach(function (ix) {
-                    iterators[ix].end();
+                    iterators[ix].end(function () {});
                 });
                 iterators = null;
             }
