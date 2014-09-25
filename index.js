@@ -4,6 +4,14 @@ var levelProxy = require('level-proxy');
 var net = require('net');
 var fs = require('fs');
 var path = require('path');
+var has = require('has');
+var manifest = require('level-manifest')({
+    methods: {
+        _iteratorCreate: { type: 'async' },
+        _iteratorNext: { type: 'async' },
+        _iteratorEnd: { type: 'async' }
+    }
+});
 
 module.exports = function (dir, opts) {
     var proxy = levelProxy();
@@ -27,8 +35,40 @@ function withProxy (proxy, dir, opts) {
         db.removeListener('error', onerror);
         
         var server = net.createServer(function (stream) {
-            stream.on('error', function (err) {});
+            var iterators = {};
+            if (!db.methods) db.methods = {};
+            
+            db.methods._iteratorCreate = { type: 'async' };
+            db._iteratorCreate = function (ix, opts) {
+                iterators[ix] = (db.iterator && db.iterator(opts))
+                    || (db.db && db.db.iterator && db.db.iterator(opts))
+                ;
+            };
+            
+            db.methods._iteratorNext = { type: 'async' };
+            db._iteratorNext = function (ix, cb) {
+                if (!has(iterators, ix)) cb(new Error('no such iterator'))
+                else iterators[ix].next(function (err, key, value) {
+                    cb(err, key, value);
+                })
+            };
+            
+            db.methods._iteratorEnd = { type: 'async' };
+            db._iteratorEnd = function (ix, cb) {
+                if (!has(iterators, ix)) cb(new Error('no such iterator'))
+                else iterators[ix].end(cb)
+            };
+            
+            stream.on('error', function (err) { cleanup() });
+            stream.once('end', cleanup);
             stream.pipe(multilevel.server(db)).pipe(stream);
+            
+            function cleanup () {
+                Object.keys(iterators).forEach(function (ix) {
+                    iterators[ix].end();
+                });
+                iterators = null;
+            }
         });
         server.listen(sockfile);
         
@@ -58,7 +98,17 @@ function withProxy (proxy, dir, opts) {
     }
     
     function createStream () {
-        var xdb = multilevel.client();
+        var xdb = multilevel.client(manifest);
+        
+        var iteratorIx = 0;
+        xdb.iterator = function (opts) {
+            var ix = iteratorIx ++;
+            xdb._iteratorCreate(ix, opts);
+            
+            return { next: next, end: end };
+            function next (cb) { xdb._iteratorNext(ix, cb) }
+            function end (cb) { xdb._iteratorEnd(ix, cb) }
+        };
         
         (function connect () {
             var stream = net.connect(sockfile);
