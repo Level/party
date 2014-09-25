@@ -48,9 +48,7 @@ function withProxy (proxy, dir, opts) {
             db.methods._iteratorNext = { type: 'async' };
             db._iteratorNext = function (ix, cb) {
                 if (!has(iterators, ix)) cb(new Error('no such iterator'))
-                else iterators[ix].next(function (err, key, value) {
-                    cb(err, key, value);
-                })
+                else iterators[ix].next(cb);
             };
             
             db.methods._iteratorEnd = { type: 'async' };
