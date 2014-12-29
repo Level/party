@@ -5,6 +5,7 @@ var net = require('net');
 var fs = require('fs');
 var path = require('path');
 var has = require('has');
+var isWin = require('os').platform()=='win32';
 var manifest = require('level-manifest')({
     methods: {
         _iteratorCreate: { type: 'async' },
@@ -68,11 +69,15 @@ function withProxy (proxy, dir, opts) {
                 iterators = null;
             }
         });
-        server.listen(sockfile);
+        server.listen(isWin ? null : sockfile);
         
         server.once('error', onerror);
         server.once('listening', onlistening);
         
+        if (isWin) server.on('close', function(){
+          fs.unlink(sockfile)
+        });
+
         function onerror (err) {
             server.removeListener('listening', onlistening);
             if (!times && err && err.code === 'EADDRINUSE') {
@@ -85,6 +90,7 @@ function withProxy (proxy, dir, opts) {
         }
         
         function onlistening () {
+            if (isWin) fs.writeFileSync(sockfile, server.address().port);
             server.removeListener('error', onerror);
             db.close = function () {
                 proxy.swap(null);
@@ -108,8 +114,15 @@ function withProxy (proxy, dir, opts) {
             function end (cb) { xdb._iteratorEnd(ix, cb) }
         };
         
-        (function connect () {
-            var stream = net.connect(sockfile);
+        (function connect (port) {
+            if (isWin && port===undefined) {
+                return fs.readFile(sockfile, 'utf-8', function(err, port){
+                    if (err) setTimeout(connect, 50);
+                    else connect(port || null)
+                });
+            }
+
+            var stream = net.connect(isWin ? port : sockfile);
             stream.on('connect', function () {
                 xdb.open = function () {};
                 xdb.close = function () {
