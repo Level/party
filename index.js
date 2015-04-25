@@ -10,7 +10,10 @@ module.exports = function (dir, opts) {
     if (!opts) opts = {};
     if (!has(opts, 'retry')) opts.retry = true;
 
-    var sockPath = path.join(dir, 'level-party.sock');
+    var sockPath = process.platform === 'win32' ?
+        '\\\\.\\pipe\\level-party\\' + path.resolve(dir) :
+        path.join(dir, 'level-party.sock');
+
     var client = multileveldown.client(opts);
 
     client.open(tryConnect);
