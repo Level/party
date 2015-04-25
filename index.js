@@ -1,137 +1,93 @@
 var level = require('level');
-var multilevel = require('multilevel');
-var levelProxy = require('level-proxy');
-var net = require('net');
-var fs = require('fs');
-var path = require('path');
 var has = require('has');
-var manifest = require('level-manifest')({
-    methods: {
-        _iteratorCreate: { type: 'async' },
-        _iteratorNext: { type: 'async' },
-        _iteratorEnd: { type: 'async' }
-    }
-});
+var pump = require('pump');
+var fs = require('fs');
+var net = require('net');
+var path = require('path');
+var multileveldown = require('multileveldown');
 
 module.exports = function (dir, opts) {
-    var proxy = levelProxy();
-    withProxy(proxy, dir, opts);
-    return proxy;
-};
+    if (!opts) opts = {};
+    if (!has(opts, 'retry')) opts.retry = true;
 
-function withProxy (proxy, dir, opts) {
-    var db = level(dir, opts);
-    var sockfile = path.join(dir, 'level-party.sock');
-    
-    db.once('error', onerror);
-    db.once('open', onopen);
-    
-    function onerror (err) {
-        db.removeListener('open', onopen);
-        if (err.type === 'OpenError') createStream();
-    }
-    
-    function onopen (times) {
-        db.removeListener('error', onerror);
-        
-        var server = net.createServer(function (stream) {
-            var iterators = {};
-            if (!db.methods) db.methods = {};
-            
-            db.methods._iteratorCreate = { type: 'async' };
-            db._iteratorCreate = function (ix, opts) {
-                iterators[ix] = (db.iterator && db.iterator(opts))
-                    || (db.db && db.db.iterator && db.db.iterator(opts))
-                ;
-            };
-            
-            db.methods._iteratorNext = { type: 'async' };
-            db._iteratorNext = function (ix, cb) {
-                if (!has(iterators, ix)) cb(new Error('no such iterator'))
-                else iterators[ix].next(cb);
-            };
-            
-            db.methods._iteratorEnd = { type: 'async' };
-            db._iteratorEnd = function (ix, cb) {
-                if (!has(iterators, ix)) cb(new Error('no such iterator'))
-                else iterators[ix].end(cb)
-            };
-            
-            stream.on('error', function (err) { cleanup() });
-            stream.once('end', cleanup);
-            stream.pipe(multilevel.server(db)).pipe(stream);
-            
-            function cleanup () {
-                Object.keys(iterators).forEach(function (ix) {
-                    iterators[ix].end(function () {});
+    var sockPath = path.join(dir, 'level-party.sock');
+    var client = multileveldown.client(opts);
+
+    client.open(tryConnect);
+
+    function tryConnect () {
+        if (!client.isOpen()) return;
+
+        var socket = net.connect(sockPath);
+        var connected = false;
+
+        socket.on('connect', function () {
+            connected = true;
+        });
+
+        pump(socket, client.createRpcStream(), socket, function () {
+            if (!client.isOpen()) return;
+
+            var db = level(dir, opts);
+
+            db.on('error', onerror);
+            db.on('open', onopen);
+
+            function onerror (err) {
+                db.removeListener('open', onopen);
+                if (err.type === 'OpenError') {
+                    if (connected) return tryConnect();
+                    setTimeout(tryConnect, 100);
+                }
+            }
+
+            function onopen () {
+                db.removeListener('error', onerror);
+                fs.unlink(sockPath, function (err) {
+                    if (err && err.code !== 'ENOENT') return db.emit('error', err);
+                    if (!client.isOpen()) return;
+
+                    var sockets = [];
+                    var down = client.db;
+
+                    var server = net.createServer(function (sock) {
+                        if (sock.unref) sock.unref();
+                        sockets.push(sock);
+                        pump(sock, multileveldown.server(db), sock, function () {
+                            sockets.splice(sockets.indexOf(sock), 1);
+                        });
+                    });
+
+                    client.db = db.db;
+                    client.close = shutdown;
+                    client.emit('leader');
+
+                    server.listen(sockPath, onlistening);
+
+                    function shutdown (cb) {
+                        sockets.forEach(function (sock) {
+                            sock.destroy();
+                        });
+                        server.on('close', function () {
+                            db.close(cb);
+                        });
+                        server.close();
+                    }
+
+                    function onlistening () {
+                        if (server.unref) server.unref();
+                        if (down.isFlushed()) return;
+
+                        var sock = net.connect(sockPath);
+                        pump(sock, down.createRpcStream(), sock);
+                        down.flush(function () {
+                            sock.destroy();
+                        });
+                    }
                 });
-                iterators = null;
             }
         });
-        server.listen(sockfile);
-        
-        server.once('error', onerror);
-        server.once('listening', onlistening);
-        
-        function onerror (err) {
-            server.removeListener('listening', onlistening);
-            if (!times && err && err.code === 'EADDRINUSE') {
-                fs.unlink(sockfile, function (err) {
-                    if (err) db.emit('error', err)
-                    else onopen(1)
-                });
-            }
-            else db.emit('error', err);
-        }
-        
-        function onlistening () {
-            server.removeListener('error', onerror);
-            db.close = function () {
-                proxy.swap(null);
-                server.close();
-            };
-            proxy.swap(db);
-            proxy.emit('open');
-        }
-    }
-    
-    function createStream () {
-        var xdb = multilevel.client(manifest);
-        
-        var iteratorIx = 0;
-        xdb.iterator = function (opts) {
-            var ix = iteratorIx ++;
-            xdb._iteratorCreate(ix, opts);
-            
-            return { next: next, end: end };
-            function next (cb) { xdb._iteratorNext(ix, cb) }
-            function end (cb) { xdb._iteratorEnd(ix, cb) }
-        };
-        
-        (function connect () {
-            var stream = net.connect(sockfile);
-            stream.on('connect', function () {
-                xdb.open = function () {};
-                xdb.close = function () {
-                    proxy.swap(null);
-                    stream.removeListener('end', onend);
-                    stream.end();
-                };
-                proxy.swap(xdb);
-                proxy.emit('open');
-            });
-            
-            stream.on('error', function (err) {
-                stream.removeListener('end', onend);
-                setTimeout(connect, 50);
-            });
-            stream.on('end', onend);
-            stream.pipe(xdb.createRpcStream()).pipe(stream);
-            
-            function onend () {
-                proxy.swap(null);
-                withProxy(proxy, dir, opts);
-            }
-        })();
-    }
-}
+    };
+
+    return client;
+};
