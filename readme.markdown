@@ -85,7 +85,7 @@ level-party does seamless failover. This means that if you create a read-stream
 and the leader goes down while you are reading that stream level-party will resume your stream
 on the new leader.
 
-**This disables leveldb snapshotting** so if your app relies on this you should disable this by setting `opts.retry = false`
+[**This disables leveldb snapshotting**](https://github.com/level/leveldown#snapshots) so if your app relies on this you should disable this by setting `opts.retry = false`
 
 ``` js
 var db = level('./data', {retry: false}) // will not retry streams / gets / puts if the leader goes down
