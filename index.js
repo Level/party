@@ -28,7 +28,8 @@ module.exports = function (dir, opts) {
             connected = true;
         });
 
-        pump(socket, client.createRpcStream(), socket, function () {
+        // we pass socket as the ref option so we dont hang the event loop
+        pump(socket, client.createRpcStream({ref: socket}), socket, function () {
             if (!client.isOpen()) return;
 
             var db = level(dir, opts);
