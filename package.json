@@ -1,6 +1,6 @@
 {
   "name": "level-party",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "open a leveldb handle multiple times",
   "main": "index.js",
   "dependencies": {
