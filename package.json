@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "has": "^1.0.0",
-    "level-prebuilt": "^0.18.0-3",
+    "level": "^1.2.0",
     "multileveldown": "^1.1.0",
     "pump": "^1.0.0"
   },
