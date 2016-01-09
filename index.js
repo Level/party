@@ -84,7 +84,7 @@ module.exports = function (dir, opts) {
 
                         var sock = net.connect(sockPath);
                         pump(sock, down.createRpcStream(), sock);
-                        down.flush(function () {
+                        client.once('flush', function () {
                             sock.destroy();
                         });
                     }

@@ -30,7 +30,7 @@ This means that if you have 2 programs, 1 that gets:
 
 ``` js
 var level = require('level-party');
-var db = level(__dirname + '/data', { encoding: 'json' });
+var db = level(__dirname + '/data', { valueEncoding: 'json' });
 
 setInterval(function () {
     db.get('a', function (err, value) {
@@ -43,7 +43,7 @@ and 1 that puts:
 
 ``` js
 var level = require('level-party');
-var db = level(__dirname + '/data', { encoding: 'json' });
+var db = level(__dirname + '/data', { valueEncoding: 'json' });
 
 var n = Math.floor(Math.random() * 100000);
 

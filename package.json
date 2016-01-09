@@ -5,8 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "has": "^1.0.0",
-    "level": "^1.2.0",
-    "multileveldown": "^1.1.0",
+    "level": "^1.4.0",
+    "multileveldown": "^2.0.0",
     "pump": "^1.0.0"
   },
   "devDependencies": {

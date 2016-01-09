@@ -11,24 +11,24 @@ test('failover election party', function (t) {
     t.plan(len * (len + 1) / 2);
     var pending = keys.length;
     var handles = {};
-    
+
     keys.forEach(function (key) {
         var h = open(key);
         h.on('open', function () {
             if (--pending === 0) spinDown();
         });
     });
-    
+
     function open (key) {
-        var h = handles[key] = level(datadir, { encoding: 'json' });
+        var h = handles[key] = level(datadir, { valueEncoding: 'json' });
         return h;
     }
-    
+
     function spinDown () {
         var alive = keys.slice();
         (function next () {
             if (alive.length === 0) return;
-            
+
             check(alive, function () {
                 var key = alive.shift();
                 handles[key].close();
@@ -36,7 +36,7 @@ test('failover election party', function (t) {
             });
         })();
     }
-    
+
     function check (keys, cb) {
         var pending = keys.length;
         if (pending === 0) return cb();
