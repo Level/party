@@ -65,6 +65,7 @@ module.exports = function (dir, opts) {
                     client.db = db.db;
                     client.close = shutdown;
                     client.emit('leader');
+                    down.forward(db.db);
 
                     server.listen(sockPath, onlistening);
 
