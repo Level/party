@@ -6,7 +6,7 @@
   "dependencies": {
     "has": "^1.0.0",
     "level": "^1.4.0",
-    "multileveldown": "^2.1.0",
+    "multileveldown": "^2.1.1",
     "pump": "^1.0.0"
   },
   "devDependencies": {
