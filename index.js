@@ -1,4 +1,4 @@
-var level = require('level');
+var level = require('@mattmorgis/level');
 var has = require('has');
 var pump = require('pump');
 var fs = require('fs');
