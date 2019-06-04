@@ -1,4 +1,4 @@
-var level = require('@mattmorgis/level');
+var level = require('level');
 var has = require('has');
 var pump = require('pump');
 var fs = require('fs');
@@ -32,7 +32,11 @@ module.exports = function (dir, opts) {
         pump(socket, client.createRpcStream({ref: socket}), socket, function () {
             if (!client.isOpen()) return;
 
-            var db = level(dir, opts);
+            var db = level(dir, opts, function(err) {
+                if (err) {
+                    onerror(err);
+                }
+            });
 
             db.on('error', onerror);
             db.on('open', onopen);
@@ -65,7 +69,7 @@ module.exports = function (dir, opts) {
                     client.db = db.db;
                     client.close = shutdown;
                     client.emit('leader');
-                    down.forward(db.db);
+                    down.db.forward(db.db);
 
                     server.listen(sockPath, onlistening);
 
@@ -81,10 +85,10 @@ module.exports = function (dir, opts) {
 
                     function onlistening () {
                         if (server.unref) server.unref();
-                        if (down.isFlushed()) return;
+                        if (down.db.isFlushed()) return;
 
                         var sock = net.connect(sockPath);
-                        pump(sock, down.createRpcStream(), sock);
+                        pump(sock, down.db.createRpcStream(), sock);
                         client.once('flush', function () {
                             sock.destroy();
                         });
