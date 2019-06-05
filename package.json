@@ -4,7 +4,7 @@
   "description": "open a leveldb handle multiple times",
   "main": "index.js",
   "dependencies": {
-    "@mattmorgis/level": "^1.8.0",
+    "@mattmorgis/level": "1.8.0",
     "has": "^1.0.0",
     "multileveldown": "^2.1.1",
     "pump": "^1.0.0"
