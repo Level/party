@@ -32,28 +32,19 @@ module.exports = function (dir, opts) {
         pump(socket, client.createRpcStream({ref: socket}), socket, function () {
             if (!client.isOpen()) return;
 
-            var db = level(dir, opts);
+            var db = level(dir, opts, onopen);
 
-            db.on('error', onerror);
-            db.on('open', onopen);
-
-            function onerror (err) {
-                db.removeListener('open', onopen);
-                if (err.type === 'OpenError') {
+            function onopen (err) {
+                if (err) {
                     if (connected) return tryConnect();
-                    setTimeout(tryConnect, 100);
+                    return setTimeout(tryConnect, 100);
                 }
-            }
 
-            function onopen () {
-                db.removeListener('error', onerror);
                 fs.unlink(sockPath, function (err) {
                     if (err && err.code !== 'ENOENT') return db.emit('error', err);
                     if (!client.isOpen()) return;
 
                     var sockets = [];
-                    var down = client.db;
-
                     var server = net.createServer(function (sock) {
                         if (sock.unref) sock.unref();
                         sockets.push(sock);
@@ -62,10 +53,9 @@ module.exports = function (dir, opts) {
                         });
                     });
 
-                    client.db = db.db;
                     client.close = shutdown;
                     client.emit('leader');
-                    down.forward(db.db);
+                    client.forward(db);
 
                     server.listen(sockPath, onlistening);
 
@@ -73,18 +63,17 @@ module.exports = function (dir, opts) {
                         sockets.forEach(function (sock) {
                             sock.destroy();
                         });
-                        server.on('close', function () {
+                        server.close(function () {
                             db.close(cb);
                         });
-                        server.close();
                     }
 
                     function onlistening () {
                         if (server.unref) server.unref();
-                        if (down.isFlushed()) return;
+                        if (client.isFlushed()) return;
 
                         var sock = net.connect(sockPath);
-                        pump(sock, down.createRpcStream(), sock);
+                        pump(sock, client.createRpcStream(), sock);
                         client.once('flush', function () {
                             sock.destroy();
                         });
