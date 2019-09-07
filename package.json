@@ -13,6 +13,7 @@
     "bytewise": "^1.1.0",
     "level-sublevel": "^6.3.11",
     "osenv": "~0.1.0",
+    "subleveldown": "^4.1.4",
     "tape": "^4.11.0"
   },
   "scripts": {
