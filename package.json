@@ -1,6 +1,6 @@
 {
   "name": "level-party",
-  "version": "3.0.4",
+  "version": "4.0.0",
   "description": "Open a leveldb handle multiple times",
   "license": "MIT",
   "main": "index.js",
