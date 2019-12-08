@@ -33,27 +33,27 @@ directory transparently.
 This means that if you have 2 programs, 1 that gets:
 
 ```js
-var level = require('level-party');
-var db = level(__dirname + '/data', { valueEncoding: 'json' });
+var level = require('level-party')
+var db = level(__dirname + '/data', { valueEncoding: 'json' })
 
 setInterval(function () {
-    db.get('a', function (err, value) {
-        console.log('a=', value);
-    });
-}, 250);
+  db.get('a', function (err, value) {
+    console.log('a=', value)
+  })
+}, 250)
 ```
 
 And 1 that puts:
 
 ```js
-var level = require('level-party');
-var db = level(__dirname + '/data', { valueEncoding: 'json' });
+var level = require('level-party')
+var db = level(__dirname + '/data', { valueEncoding: 'json' })
 
-var n = Math.floor(Math.random() * 100000);
+var n = Math.floor(Math.random() * 100000)
 
 setInterval(function () {
-    db.put('a', n + 1);
-}, 1000);
+  db.put('a', n + 1)
+}, 1000)
 ```
 
 and you start them up in any order, everything will just work! No more
@@ -91,7 +91,7 @@ and the leader goes down while you are reading that stream level-party will resu
 [**This disables leveldb snapshotting**](https://github.com/level/leveldown#snapshots) so if your app relies on this you should disable this by setting `opts.retry = false`
 
 ```js
-var db = level('./data', {retry: false}) // will not retry streams / gets / puts if the leader goes down
+var db = level('./data', { retry: false }) // will not retry streams / gets / puts if the leader goes down
 ```
 
 ## Windows support
