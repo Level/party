@@ -1,8 +1,21 @@
 {
   "name": "level-party",
   "version": "3.0.4",
-  "description": "open a leveldb handle multiple times",
+  "description": "Open a leveldb handle multiple times",
+  "license": "MIT",
   "main": "index.js",
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "scripts": {
+    "test": "standard && hallmark && nyc tape test/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "hallmark": "hallmark --fix",
+    "dependency-check": "dependency-check --no-dev . test/*.js",
+    "prepublishOnly": "npm run dependency-check"
+  },
   "dependencies": {
     "has": "^1.0.0",
     "level": "^6.0.0",
@@ -11,18 +24,24 @@
   },
   "devDependencies": {
     "bytewise": "^1.1.0",
+    "coveralls": "^3.0.9",
+    "dependency-check": "^4.1.0",
+    "hallmark": "^2.0.0",
+    "level-community": "^3.0.0",
+    "nyc": "^14.1.1",
     "osenv": "~0.1.0",
+    "standard": "^14.3.1",
     "subleveldown": "^4.1.4",
     "tape": "^4.11.0"
   },
-  "scripts": {
-    "test": "tape test/*.js"
+  "hallmark": {
+    "community": "level-community"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/substack/level-party.git"
+    "url": "https://github.com/Level/party.git"
   },
-  "homepage": "https://github.com/substack/level-party",
+  "homepage": "https://github.com/Level/party",
   "keywords": [
     "level",
     "leveldb",
@@ -33,10 +52,7 @@
     "unix",
     "socket"
   ],
-  "author": {
-    "name": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net"
-  },
-  "license": "MIT"
+  "engines": {
+    "node": ">=8"
+  }
 }
