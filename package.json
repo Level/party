@@ -5,15 +5,15 @@
   "main": "index.js",
   "dependencies": {
     "has": "^1.0.0",
-    "level": "^1.4.0",
-    "multileveldown": "^2.1.1",
-    "pump": "^1.0.0"
+    "level": "^6.0.0",
+    "multileveldown": "^3.0.0",
+    "pump": "^3.0.0"
   },
   "devDependencies": {
-    "tape": "^3.0.0",
-    "bytewise": "~0.7.1",
-    "level-sublevel": "^6.3.11",
-    "osenv": "~0.1.0"
+    "bytewise": "^1.1.0",
+    "osenv": "~0.1.0",
+    "subleveldown": "^4.1.4",
+    "tape": "^4.11.0"
   },
   "scripts": {
     "test": "tape test/*.js"
