@@ -31,7 +31,7 @@
     "nyc": "^14.1.1",
     "osenv": "~0.1.0",
     "standard": "^14.3.1",
-    "subleveldown": "^4.1.4",
+    "subleveldown": "^5.0.1",
     "tape": "^5.0.1"
   },
   "hallmark": {
