@@ -31,14 +31,14 @@ module.exports = function (dir, opts = {}) {
     })
 
     // we pass socket as the ref option so we dont hang the event loop
-    pipeline(socket, client.createRpcStream({ ref: socket }), socket, () => {
+    pipeline(socket, client.createRpcStream({ ref: socket }), socket, function () {
       // TODO: err?
 
       if (!client.isOpen()) {
         return
       }
 
-      const db = level(dir, opts, (err) => {
+      const db = level(dir, opts, function (err) {
         if (err) {
           // TODO: This can cause an invisible retry loop that never completes
           // and leads to memory leaks.
@@ -50,7 +50,7 @@ module.exports = function (dir, opts = {}) {
           return
         }
 
-        fs.unlink(sockPath, (err) => {
+        fs.unlink(sockPath, function (err) {
           if (err && err.code !== 'ENOENT') {
             // TODO: Is this how to forward errors?
             db.emit('error', err)
@@ -69,13 +69,24 @@ module.exports = function (dir, opts = {}) {
 
             sockets.add(sock)
 
-            pipeline(sock, multileveldown.server(db), sock, () => {
+            pipeline(sock, multileveldown.server(db), sock, function () {
               // TODO: err?
               sockets.delete(sock)
             })
           })
 
-          client.close = (cb) => {
+          client.close = shutdown
+          client.emit('leader')
+          client.forward(db)
+
+          server.listen(sockPath, onlistening)
+            .on('error', function () {
+              // TODO: Is this how to forward errors?
+              // TODO: tryConnect()?
+              db.emit('error', err)
+            })
+
+          function shutdown (cb) {
             for (const sock of sockets) {
               sock.destroy()
             }
@@ -84,10 +95,8 @@ module.exports = function (dir, opts = {}) {
               db.close(cb)
             })
           }
-          client.emit('leader')
-          client.forward(db)
 
-          server.listen(sockPath, () => {
+          function onlistening () {
             if (server.unref) {
               server.unref()
             }
@@ -98,19 +107,14 @@ module.exports = function (dir, opts = {}) {
 
             const sock = net.connect(sockPath)
 
-            pipeline(sock, client.createRpcStream(), sock, () => {
+            pipeline(sock, client.createRpcStream(), sock, function () {
               // TODO: err?
             })
 
             client.once('flush', function () {
               sock.destroy()
             })
-          })
-            .on('error', () => {
-              // TODO: Is this how to forward errors?
-              // TODO: tryConnect()?
-              db.emit('error', err)
-            })
+          }
         })
       })
     })
