@@ -1,7 +1,7 @@
 'use strict'
 
 const level = require('level')
-const { pipeline } = require('stream')
+const { pipeline: pump } = require('stream')
 const fs = require('fs')
 const net = require('net')
 const path = require('path')
@@ -31,7 +31,7 @@ module.exports = function (dir, opts = {}) {
     })
 
     // we pass socket as the ref option so we dont hang the event loop
-    pipeline(socket, client.createRpcStream({ ref: socket }), socket, function () {
+    pump(socket, client.createRpcStream({ ref: socket }), socket, function () {
       // TODO: err?
 
       if (!client.isOpen()) {
@@ -62,14 +62,14 @@ module.exports = function (dir, opts = {}) {
           }
 
           const sockets = new Set()
-          const server = net.createServer((sock) => {
+          const server = net.createServer(function (sock) {
             if (sock.unref) {
               sock.unref()
             }
 
             sockets.add(sock)
 
-            pipeline(sock, multileveldown.server(db), sock, function () {
+            pump(sock, multileveldown.server(db), sock, function () {
               // TODO: err?
               sockets.delete(sock)
             })
@@ -107,7 +107,7 @@ module.exports = function (dir, opts = {}) {
 
             const sock = net.connect(sockPath)
 
-            pipeline(sock, client.createRpcStream(), sock, function () {
+            pump(sock, client.createRpcStream(), sock, function () {
               // TODO: err?
             })
 
