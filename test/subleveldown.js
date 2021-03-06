@@ -1,18 +1,18 @@
-var test = require('tape')
-var level = require('..')
-var path = require('path')
-var sub = require('subleveldown')
-var tmpdir = require('osenv').tmpdir()
-var datadir = path.join(tmpdir, 'level-party-' + Math.random())
+const test = require('tape')
+const level = require('..')
+const path = require('path')
+const sub = require('subleveldown')
+const tmpdir = require('osenv').tmpdir()
+const datadir = path.join(tmpdir, 'level-party-' + Math.random())
 
 test('subleveldown on level-party', function (t) {
   t.plan(9)
 
-  var a = level(datadir)
-  var b = level(datadir)
-  var asub = sub(a, 'test', { valueEncoding: 'json' })
-  var bsub = sub(b, 'test')
-  var obj = { test: Math.floor(Math.random() * 100000) }
+  const a = level(datadir)
+  const b = level(datadir)
+  const asub = sub(a, 'test', { valueEncoding: 'json' })
+  const bsub = sub(b, 'test')
+  const obj = { test: Math.floor(Math.random() * 100000) }
 
   asub.put('a', obj, function (err) {
     t.ifError(err)

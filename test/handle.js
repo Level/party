@@ -1,15 +1,15 @@
-var test = require('tape')
-var level = require('..')
-var path = require('path')
-var tmpdir = require('osenv').tmpdir()
-var datadir = path.join(tmpdir, 'level-party-' + Math.random())
+const test = require('tape')
+const level = require('..')
+const path = require('path')
+const tmpdir = require('osenv').tmpdir()
+const datadir = path.join(tmpdir, 'level-party-' + Math.random())
 
 test('two handles', function (t) {
   t.plan(1)
 
-  var adb = level(datadir, { valueEncoding: 'json' })
-  var bdb = level(datadir, { valueEncoding: 'json' })
-  var value = Math.floor(Math.random() * 100000)
+  const adb = level(datadir, { valueEncoding: 'json' })
+  const bdb = level(datadir, { valueEncoding: 'json' })
+  const value = Math.floor(Math.random() * 100000)
 
   adb.put('a', value, function (err) {
     if (err) t.fail(err)

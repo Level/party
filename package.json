@@ -28,9 +28,9 @@
     "dependency-check": "^4.1.0",
     "hallmark": "^3.1.0",
     "level-community": "^3.0.0",
-    "nyc": "^14.1.1",
+    "nyc": "^15.1.0",
     "osenv": "~0.1.0",
-    "standard": "^14.3.1",
+    "standard": "^16.0.3",
     "subleveldown": "^5.0.1",
     "tape": "^5.0.1"
   },

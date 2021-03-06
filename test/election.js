@@ -1,35 +1,35 @@
-var test = require('tape')
-var level = require('..')
-var path = require('path')
-var tmpdir = require('osenv').tmpdir()
-var datadir = path.join(tmpdir, 'level-party-' + Math.random())
+const test = require('tape')
+const level = require('..')
+const path = require('path')
+const tmpdir = require('osenv').tmpdir()
+const datadir = path.join(tmpdir, 'level-party-' + Math.random())
 
 test('failover election party', function (t) {
-  var keys = ['a', 'b', 'c', 'e', 'f', 'g']
-  var len = keys.length
+  const keys = ['a', 'b', 'c', 'e', 'f', 'g']
+  const len = keys.length
   t.plan(len * (len + 1) / 2)
-  var pending = keys.length
-  var handles = {}
+  let pending = keys.length
+  const handles = {}
 
   keys.forEach(function (key) {
-    var h = open(key)
+    const h = open(key)
     h.on('open', function () {
       if (--pending === 0) spinDown()
     })
   })
 
   function open (key) {
-    var h = handles[key] = level(datadir, { valueEncoding: 'json' })
+    const h = handles[key] = level(datadir, { valueEncoding: 'json' })
     return h
   }
 
   function spinDown () {
-    var alive = keys.slice();
+    const alive = keys.slice();
     (function next () {
       if (alive.length === 0) return
 
       check(alive, function () {
-        var key = alive.shift()
+        const key = alive.shift()
         handles[key].close()
         next()
       })
@@ -37,11 +37,11 @@ test('failover election party', function (t) {
   }
 
   function check (keys, cb) {
-    var pending = keys.length
+    let pending = keys.length
     if (pending === 0) return cb()
-    for (var i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       (function (a, b) {
-        var value = Math.random()
+        const value = Math.random()
         handles[a].put(a, value, function (err) {
           if (err) t.fail(err)
           handles[b].get(a, function (err, x) {
