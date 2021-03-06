@@ -30,7 +30,7 @@ module.exports = function (dir, opts = {}) {
       connected = true
     })
 
-    // we pass socket as the ref option so we dont hang the event loop
+    // Pass socket as the ref option so we dont hang the event loop.
     pump(socket, client.createRpcStream({ ref: socket }), socket, function () {
       // TODO: err?
 
@@ -38,10 +38,13 @@ module.exports = function (dir, opts = {}) {
         return
       }
 
-      const db = level(dir, opts, function (err) {
+      const db = level(dir, opts, onopen)
+
+      function onopen (err) {
         if (err) {
           // TODO: This can cause an invisible retry loop that never completes
           // and leads to memory leaks.
+          // TODO: What errors should be retried?
           if (connected) {
             tryConnect()
           } else {
@@ -68,7 +71,6 @@ module.exports = function (dir, opts = {}) {
             }
 
             sockets.add(sock)
-
             pump(sock, multileveldown.server(db), sock, function () {
               // TODO: err?
               sockets.delete(sock)
@@ -90,7 +92,6 @@ module.exports = function (dir, opts = {}) {
             for (const sock of sockets) {
               sock.destroy()
             }
-
             server.close(() => {
               db.close(cb)
             })
@@ -100,23 +101,20 @@ module.exports = function (dir, opts = {}) {
             if (server.unref) {
               server.unref()
             }
-
             if (client.isFlushed()) {
               return
             }
 
             const sock = net.connect(sockPath)
-
             pump(sock, client.createRpcStream(), sock, function () {
               // TODO: err?
             })
-
             client.once('flush', function () {
               sock.destroy()
             })
           }
         })
-      })
+      }
     })
   }
 
