@@ -17,7 +17,6 @@
     "prepublishOnly": "npm run dependency-check"
   },
   "dependencies": {
-    "has": "^1.0.0",
     "level": "^6.0.0",
     "multileveldown": "^3.0.0",
     "pump": "^3.0.0"
