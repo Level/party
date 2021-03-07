@@ -1,12 +1,12 @@
-var level = require('..')
-var path = require('path')
-var db = level(path.join(__dirname, 'data'), { valueEncoding: 'json' })
+const level = require('..')
+const path = require('path')
+const db = level(path.join(__dirname, 'data'), { valueEncoding: 'json' })
 
 db.on('leader', function () {
   console.log('i am the leader now')
 })
 
-var tick = 0
+let tick = 0
 
 function loop () {
   db.put('hello-' + tick, { hello: 'world-' + tick }, function () {
