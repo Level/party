@@ -1,7 +1,7 @@
 'use strict'
 
 const level = require('level')
-const { pipeline } = require('readable-stream')
+const { pipeline: pump } = require('readable-stream')
 const fs = require('fs')
 const net = require('net')
 const path = require('path')
@@ -14,7 +14,6 @@ module.exports = function (dir, opts = {}) {
 
   opts = { retry: true, ...opts }
 
-  const pump = opts.pump || pipeline
   const client = multileveldown.client(opts)
 
   client.open(tryConnect)
