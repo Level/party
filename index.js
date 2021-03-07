@@ -1,7 +1,7 @@
 'use strict'
 
 const level = require('level')
-const { pipeline: pump } = require('readable-stream')
+const { pipeline: pump, finished: eos } = require('readable-stream')
 const fs = require('fs')
 const net = require('net')
 const path = require('path')
@@ -31,7 +31,8 @@ module.exports = function (dir, opts = {}) {
     })
 
     // Pass socket as the ref option so we dont hang the event loop.
-    pump(socket, client.createRpcStream({ ref: socket }), socket, function () {
+    createRpcStream(client, socket)
+    eos(socket, function () {
       // TODO: err?
 
       if (!client.isOpen()) {
@@ -106,9 +107,7 @@ module.exports = function (dir, opts = {}) {
             }
 
             const sock = net.connect(sockPath)
-            pump(sock, client.createRpcStream(), sock, function () {
-              // TODO: err?
-            })
+            createRpcStream(client, sock)
             client.once('flush', function () {
               sock.destroy()
             })
@@ -119,4 +118,15 @@ module.exports = function (dir, opts = {}) {
   }
 
   return client
+}
+
+function createRpcStream (client, socket) {
+  socket.setWritable = function (stream) {
+    pump(socket, stream, () => {})
+  }
+  socket.setReadable = function (stream) {
+    pump(stream, socket, () => {})
+  }
+  const multileveldown = client._db.db // Grab multileveldown instance.
+  multileveldown.createRpcStream({ ref: socket }, socket)
 }
