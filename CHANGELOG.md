@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.0] - 2021-03-07
+
+### Changed
+
+- **Breaking:** modernize syntax (drops node 8) ([#26](https://github.com/Level/party/issues/26)) ([`9615cac`](https://github.com/Level/party/commit/9615cac), [`b0aa870`](https://github.com/Level/party/commit/b0aa870)) (Robert Nagy)
+- Bump `subleveldown` from `4.1.4` to `5.0.1` ([#24](https://github.com/Level/party/issues/24)) ([`0732684`](https://github.com/Level/party/commit/0732684)) (Vincent Weevers).
+
 ## [4.0.0] - 2019-12-08
 
 ### Changed
@@ -133,6 +140,8 @@ No changes.
 ## 0.0.0 - 2014-02-17
 
 Initial release :seedling:.
+
+[5.0.0]: https://github.com/Level/party/compare/v4.0.0...v5.0.0
 
 [4.0.0]: https://github.com/Level/party/compare/v3.0.4...v4.0.0
 

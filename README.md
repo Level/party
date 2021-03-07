@@ -134,6 +134,6 @@ To sustain [`Level`](https://github.com/Level) and its activities, become a back
 
 ## License
 
-[MIT](LICENSE.md) © 2014-present James Halliday and [Contributors](CONTRIBUTORS.md).
+[MIT](LICENSE.md) © 2014-present James Halliday and contributors.
 
 [level-badge]: https://leveljs.org/img/badge.svg
