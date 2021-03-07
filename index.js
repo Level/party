@@ -127,6 +127,6 @@ function createRpcStream (client, socket) {
   socket.setReadable = function (stream) {
     pump(stream, socket, () => {})
   }
-  const multileveldown = client._db.db // Grab multileveldown instance.
+  const multileveldown = client._db.db // HACK: Grab multileveldown instance.
   multileveldown.createRpcStream({ ref: socket }, socket)
 }
