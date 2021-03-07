@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "level": "^6.0.0",
-    "multileveldown": "^3.0.0",
-    "pump": "^3.0.0"
+    "multileveldown": "^3.0.0"
   },
   "devDependencies": {
     "bytewise": "^1.1.0",
