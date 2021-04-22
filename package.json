@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "standard && hallmark && nyc tape test/*.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report -r lcovonly",
     "hallmark": "hallmark --fix",
     "dependency-check": "dependency-check --no-dev . test/*.js",
     "prepublishOnly": "npm run dependency-check"
@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "bytewise": "^1.1.0",
-    "coveralls": "^3.0.9",
     "dependency-check": "^4.1.0",
     "hallmark": "^3.1.0",
     "level-community": "^3.0.0",
