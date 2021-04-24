@@ -7,7 +7,7 @@ Open a leveldb handle multiple times, transparently upgrading to use
 [![npm](https://img.shields.io/npm/v/level-party.svg?label=&logo=npm)](https://www.npmjs.com/package/level-party)
 [![Node version](https://img.shields.io/node/v/level-party.svg)](https://www.npmjs.com/package/level-party)
 [![Travis](https://img.shields.io/travis/com/Level/party.svg?logo=travis&label=)](https://travis-ci.com/Level/party)
-[![codecov](https://codecov.io/gh/Level/level-js/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/party)
+[![codecov](https://codecov.io/gh/Level/party/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/party)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![npm](https://img.shields.io/npm/dm/level-party.svg?label=dl)](https://www.npmjs.com/package/level-party)
 [![Backers on Open Collective](https://opencollective.com/level/backers/badge.svg?color=orange)](#backers)
