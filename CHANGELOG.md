@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.1.0] - 2021-10-01
+
+_Effectively adds `db.getMany(keys)`, `db.supports`, `db.clear()` and `for await...of db.iterator()`._
+
+### Changed
+
+- Bump `multileveldown` from 3.x to 5.x ([`bcd7c70`](https://github.com/Level/party/commit/bcd7c70), [`a33b0a8`](https://github.com/Level/party/commit/a33b0a8)) (Vincent Weevers)
+- Bump `level` from 6.x to 7.x ([#32](https://github.com/Level/party/issues/32)) ([`3db143d`](https://github.com/Level/party/commit/3db143d)) (Vincent Weevers).
+
 ## [5.0.0] - 2021-03-07
 
 ### Changed
@@ -137,9 +146,11 @@ No changes.
 
 - Use `~` for dependencies instead of `^` ([`facd354`](https://github.com/Level/party/commit/facd354)) ([**@substack**](https://github.com/substack))
 
-## 0.0.0 - 2014-02-17
+## [0.0.0] - 2014-02-17
 
 Initial release :seedling:.
+
+[5.1.0]: https://github.com/Level/party/releases/tag/v5.1.0
 
 [5.0.0]: https://github.com/Level/party/releases/tag/v5.0.0
 
@@ -174,3 +185,5 @@ Initial release :seedling:.
 [0.0.2]: https://github.com/Level/party/releases/tag/0.0.2
 
 [0.0.1]: https://github.com/Level/party/releases/tag/0.0.1
+
+[0.0.0]: https://github.com/Level/party/releases/tag/0.0.0
