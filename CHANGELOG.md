@@ -141,36 +141,36 @@ No changes.
 
 Initial release :seedling:.
 
-[5.0.0]: https://github.com/Level/party/compare/v4.0.0...v5.0.0
+[5.0.0]: https://github.com/Level/party/releases/tag/v5.0.0
 
-[4.0.0]: https://github.com/Level/party/compare/v3.0.4...v4.0.0
+[4.0.0]: https://github.com/Level/party/releases/tag/v4.0.0
 
-[3.0.4]: https://github.com/Level/party/compare/v3.0.3...v3.0.4
+[3.0.4]: https://github.com/Level/party/releases/tag/v3.0.4
 
-[3.0.3]: https://github.com/Level/party/compare/v3.0.2...v3.0.3
+[3.0.3]: https://github.com/Level/party/releases/tag/v3.0.3
 
-[3.0.2]: https://github.com/Level/party/compare/v3.0.1...v3.0.2
+[3.0.2]: https://github.com/Level/party/releases/tag/v3.0.2
 
-[3.0.1]: https://github.com/Level/party/compare/v3.0.0...v3.0.1
+[3.0.1]: https://github.com/Level/party/releases/tag/v3.0.1
 
-[3.0.0]: https://github.com/Level/party/compare/v2.1.2...v3.0.0
+[3.0.0]: https://github.com/Level/party/releases/tag/v3.0.0
 
-[2.1.2]: https://github.com/Level/party/compare/v2.1.1...v2.1.2
+[2.1.2]: https://github.com/Level/party/releases/tag/v2.1.2
 
-[2.1.1]: https://github.com/Level/party/compare/v2.1.0...v2.1.1
+[2.1.1]: https://github.com/Level/party/releases/tag/v2.1.1
 
-[2.1.0]: https://github.com/Level/party/compare/v2.0.0...v2.1.0
+[2.1.0]: https://github.com/Level/party/releases/tag/v2.1.0
 
-[2.0.0]: https://github.com/Level/party/compare/1.0.1...v2.0.0
+[2.0.0]: https://github.com/Level/party/releases/tag/v2.0.0
 
-[1.0.1]: https://github.com/Level/party/compare/1.0.0...1.0.1
+[1.0.1]: https://github.com/Level/party/releases/tag/1.0.1
 
-[1.0.0]: https://github.com/Level/party/compare/0.0.4...1.0.0
+[1.0.0]: https://github.com/Level/party/releases/tag/1.0.0
 
-[0.0.4]: https://github.com/Level/party/compare/0.0.3...0.0.4
+[0.0.4]: https://github.com/Level/party/releases/tag/0.0.4
 
-[0.0.3]: https://github.com/Level/party/compare/0.0.2...0.0.3
+[0.0.3]: https://github.com/Level/party/releases/tag/0.0.3
 
-[0.0.2]: https://github.com/Level/party/compare/0.0.1...0.0.2
+[0.0.2]: https://github.com/Level/party/releases/tag/0.0.2
 
-[0.0.1]: https://github.com/Level/party/compare/0.0.0...0.0.1
+[0.0.1]: https://github.com/Level/party/releases/tag/0.0.1

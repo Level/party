@@ -16,6 +16,11 @@
     "dependency-check": "dependency-check --no-dev . test/*.js",
     "prepublishOnly": "npm run dependency-check"
   },
+  "files": [
+    "example",
+    "index.js",
+    "CHANGELOG.md"
+  ],
   "dependencies": {
     "level": "^7.0.0",
     "multileveldown": "^5.0.0",
@@ -25,15 +30,11 @@
     "bytewise": "^1.1.0",
     "dependency-check": "^4.1.0",
     "hallmark": "^3.1.0",
-    "level-community": "^3.0.0",
     "nyc": "^15.1.0",
     "osenv": "~0.1.0",
     "standard": "^16.0.3",
     "subleveldown": "^6.0.0",
     "tape": "^5.0.1"
-  },
-  "hallmark": {
-    "community": "level-community"
   },
   "repository": {
     "type": "git",
