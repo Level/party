@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "level": "^7.0.0",
-    "multileveldown": "^4.0.0",
+    "multileveldown": "^5.0.0",
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "nyc": "^15.1.0",
     "osenv": "~0.1.0",
     "standard": "^16.0.3",
-    "subleveldown": "^5.0.1",
+    "subleveldown": "^6.0.0",
     "tape": "^5.0.1"
   },
   "hallmark": {
