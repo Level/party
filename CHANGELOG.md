@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.1.1] - 2021-10-02
+
+### Fixed
+
+- Bump dependencies to prevent dedupe ([`ac6e8c9`](https://github.com/Level/party/commit/ac6e8c9)) (Vincent Weevers).
+
 ## [5.1.0] - 2021-10-01
 
 _Effectively adds `db.getMany(keys)`, `db.supports`, `db.clear()` and `for await...of db.iterator()`._
@@ -149,6 +155,8 @@ No changes.
 ## [0.0.0] - 2014-02-17
 
 Initial release :seedling:.
+
+[5.1.1]: https://github.com/Level/party/releases/tag/v5.1.1
 
 [5.1.0]: https://github.com/Level/party/releases/tag/v5.1.0
 
