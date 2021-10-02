@@ -22,8 +22,8 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
-    "level": "^7.0.0",
-    "multileveldown": "^5.0.0",
+    "level": "^7.0.1",
+    "multileveldown": "^5.0.1",
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "nyc": "^15.1.0",
     "osenv": "~0.1.0",
     "standard": "^16.0.3",
-    "subleveldown": "^6.0.0",
+    "subleveldown": "^6.0.1",
     "tape": "^5.0.1"
   },
   "repository": {
