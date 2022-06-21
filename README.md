@@ -1,5 +1,7 @@
 # level-party
 
+**Update: this project has been succeeded by [rave-level](https://github.com/Level/rave-level).** It has support for sublevels and other features.
+
 Open a leveldb handle multiple times, transparently upgrading to use
 [`multileveldown`](https://npmjs.org/package/multileveldown) when more than 1 process try to use the same leveldb data directory at once and re-electing a new master when the primary unix socket goes down.
 
