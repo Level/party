@@ -1,16 +1,6 @@
 # level-party
 
-Open a leveldb handle multiple times, transparently upgrading to use
-[`multileveldown`](https://npmjs.org/package/multileveldown) when more than 1 process try to use the same leveldb data directory at once and re-electing a new master when the primary unix socket goes down.
-
-[![level badge][level-badge]](https://github.com/Level/awesome)
-[![npm](https://img.shields.io/npm/v/level-party.svg)](https://www.npmjs.com/package/level-party)
-[![Node version](https://img.shields.io/node/v/level-party.svg)](https://www.npmjs.com/package/level-party)
-[![Test](https://img.shields.io/github/workflow/status/Level/party/Test?label=test)](https://github.com/Level/party/actions/workflows/test.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/Level/party?label=&logo=codecov&logoColor=fff)](https://codecov.io/gh/Level/party)
-[![Standard](https://img.shields.io/badge/standard-informational?logo=javascript&logoColor=fff)](https://standardjs.com)
-[![Common Changelog](https://common-changelog.org/badge.svg)](https://common-changelog.org)
-[![Donate](https://img.shields.io/badge/donate-orange?logo=open-collective&logoColor=fff)](https://opencollective.com/level)
+**Superseded by [`rave-level`](https://github.com/Level/rave-level). Please see [Frequently Asked Questions](https://github.com/Level/community#faq).**
 
 ## Example
 
@@ -126,5 +116,3 @@ Support us with a monthly donation on [Open Collective](https://opencollective.c
 ## License
 
 [MIT](LICENSE)
-
-[level-badge]: https://leveljs.org/img/badge.svg
